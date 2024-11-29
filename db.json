@@ -1,3 +1,13 @@
 {
-  "promocodes": []
+  "promocodes":[
+    {
+      "value": "FJSDJF-SDFJJ-1"
+    },
+    {
+      "value": "FJSDJF-SDFJJ-2"
+    },
+    {
+      "value": "FJSDJF-SDFJJ-3"
+    }
+  ]
 }
