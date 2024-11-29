@@ -1,32 +1,55 @@
-const express = require('express');
-const path = require('path');
+import { dirname, isAbsolute, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const app = express();
+import { App } from '@tinyhttp/app'
+import { cors } from '@tinyhttp/cors'
+import { Eta } from 'eta'
+import { JSONFilePreset } from 'lowdb/node'
+import { json } from 'milliparsec'
+import sirv from 'sirv'
+
 const port = 8080;
 
-init();
+const db = await JSONFilePreset('db.json', { promocodes: [] });
 
-async function init() {
-  const lowdb = await import('lowdb/node');
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const isProduction = process.env['NODE_ENV'] === 'production'
 
-  const db = await lowdb.JSONFilePreset('db.json', { promocodes: [] });
+const eta = new Eta({
+  views: join(__dirname, 'public'),
+  cache: isProduction,
+})
 
-  app.get('/new-promocode', async (_req, res) => {
-    const promocode = db.data.promocodes.pop();
-    await db.write();
+const app = new App()
+app.use(sirv('public', { dev: !isProduction }))
 
-    if (!promocode) {
-      res.status(404);
-      res.end();
-      return;
-    }
+app.use((req, res, next) => {
+  return cors({
+    allowedHeaders: req.headers['access-control-request-headers']
+      ?.split(',')
+      .map((h) => h.trim()),
+  })(req, res, next)
+}).options('*', cors())
 
-    res.json(promocode);
-  });
+app.use(json())
 
-  app.use('/', express.static(path.join(__dirname, 'public')));
+app.get('/', (_req, res) =>
+  res.send(eta.render('index.html', { data: db.data })),
+)
 
-  app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-  });
-}
+app.get('new-promocode', async (_req, res) => {
+  const promocode = db.data.promocodes.pop();
+  await db.write();
+
+  if (!promocode) {
+    res.status(404);
+    res.end();
+    return;
+  }
+
+  res.json(promocode);
+});
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
