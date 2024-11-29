@@ -4,6 +4,8 @@ meta:
   toolchain:
     name: npm
     version: 18
+build:
+  skip: true
 run:
   command: npm run start
   persistenceMount: /data
