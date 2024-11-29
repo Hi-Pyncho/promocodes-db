@@ -1,4 +1,4 @@
-import { dirname, join } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { readFileSync } from 'fs';
 
@@ -11,7 +11,7 @@ import sirv from 'sirv'
 
 const port = 8080;
 
-const db = await JSONFilePreset(join('..','db.json'), { promocodes: [] });
+const db = await JSONFilePreset(resolve('..','db.json'), { promocodes: [] });
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const isProduction = process.env['NODE_ENV'] === 'production'
