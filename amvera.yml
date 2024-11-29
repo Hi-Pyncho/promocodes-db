@@ -7,4 +7,4 @@ meta:
 run:
   command: npm run start
   persistenceMount: /data
-  containerPort: 80
+  containerPort: 8080
