@@ -11,7 +11,7 @@ import sirv from 'sirv'
 
 const port = 8080;
 
-const db = await JSONFilePreset(join('db.json'), { promocodes: [] });
+const db = await JSONFilePreset(join('..','db.json'), { promocodes: [] });
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const isProduction = process.env['NODE_ENV'] === 'production'
