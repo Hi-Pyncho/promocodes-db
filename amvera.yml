@@ -1,6 +1,6 @@
 ---
 meta:
-  environment: browser
+  environment: npm
   toolchain:
     name: npm
     version: 18
