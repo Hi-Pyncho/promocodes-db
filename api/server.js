@@ -9,11 +9,9 @@ import { JSONFilePreset } from 'lowdb/node'
 import { json } from 'milliparsec'
 import sirv from 'sirv'
 
-const dbPath = JSON.parse(readFileSync(join('db.json')));
-
 const port = 8080;
 
-const db = await JSONFilePreset(dbPath, { promocodes: [] });
+const db = await JSONFilePreset(join('db.json'), { promocodes: [] });
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const isProduction = process.env['NODE_ENV'] === 'production'
